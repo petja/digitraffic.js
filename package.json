@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "digitraffic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:petja/digitraffic.js.git",
+  "author": "petja <hello@petja.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.18.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

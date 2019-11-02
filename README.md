@@ -1,5 +1,7 @@
 # Digitraffic.js
 
+[![Build Status](https://travis-ci.org/petja/digitraffic.js.svg?branch=master)](https://travis-ci.org/petja/digitraffic.js)
+
 **Digitraffic.js** helps developers to build apps upon information about Finnish railway network and roads in rapid fashion.
 
 Thanks to strongly-typed code, you can enjoy benefits of Intellisense and type-checking.

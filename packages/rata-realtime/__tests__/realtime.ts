@@ -1,5 +1,5 @@
 import { getMQTTClient, watchTrains } from '../src/index'
-import { Train } from '@digitraffic/rata/dist/Train'
+import * as rata from '@digitraffic/rata'
 import { DateTime } from 'luxon'
 import { MqttClient } from 'mqtt'
 
@@ -29,7 +29,7 @@ describe('listen for trains', () => {
   }, 60000)
 
   it(`should only return trains where departureDate=${today.toISODate()}`, async done => {
-    const messages: Train[] = []
+    const messages: rata.trains.Train[] = []
 
     watchTrains({ departureDate: today }, client).onMessage(train => {
       messages.push(train)
@@ -45,7 +45,7 @@ describe('listen for trains', () => {
   }, 60000)
 
   it(`should only return trains where trainType=HL and runningCurrently=true`, async done => {
-    const messages: Train[] = []
+    const messages: rata.trains.Train[] = []
 
     watchTrains({ trainType: 'HL', runningCurrently: true }, client).onMessage(train => {
       messages.push(train)

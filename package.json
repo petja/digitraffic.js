@@ -6,6 +6,9 @@
   "repository": "git@github.com:petja/digitraffic.js.git",
   "author": "petja <hello@petja.me>",
   "license": "MIT",
+  "scripts": {
+    "test": "lerna run test"
+  },
   "devDependencies": {
     "lerna": "^3.18.3"
   },

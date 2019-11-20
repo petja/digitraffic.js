@@ -1,5 +1,6 @@
 import API from './API'
 import { AxiosResponse } from 'axios'
+import { DigitrafficError, DigitrafficErrorCode } from '.'
 
 export interface Station {
   stationName: string
@@ -33,5 +34,16 @@ export const list = async () => {
 /**
  * Get single station by its shortCode
  */
-export const retrieve = async (shortCode: string) =>
-  (await list()).find(station => station.stationShortCode.toUpperCase() === shortCode.toUpperCase())
+export const retrieve = async (shortCode: string) => {
+  const stations = await list()
+
+  const station = stations.find(
+    station => station.stationShortCode.toUpperCase() === shortCode.toUpperCase()
+  )
+
+  if (station) {
+    return station
+  } else {
+    throw new DigitrafficError(DigitrafficErrorCode.NOT_FOUND)
+  }
+}

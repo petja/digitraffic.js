@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
 
+import { Station, retrieve } from './Station'
+
 type CountryCode = 'FI' | 'RU'
 
 interface TrainTrackingMessageProps {
@@ -9,30 +11,39 @@ interface TrainTrackingMessageProps {
   trackSection: string
   nextTrackSection?: string
   previousTrackSection?: string
-  station: string
-  nextStation?: string
-  previousStation?: string
   type: 'OCCUPY' | 'RELEASE'
 }
 
 export interface TrainTrackingMessageJSON extends TrainTrackingMessageProps {
   departureDate: string
   timestamp: string
+  station: string
+  nextStation?: string
+  previousStation?: string
 }
 
 export interface TrainTrackingMessage extends TrainTrackingMessageProps {
   departureDate: DateTime
   timestamp: DateTime
+  station: Station
+  nextStation?: Station
+  previousStation?: Station
 }
 
-export const toJSON = (row: TrainTrackingMessage): TrainTrackingMessageJSON => ({
+export const toJSON = async (row: TrainTrackingMessage): Promise<TrainTrackingMessageJSON> => ({
   ...row,
   departureDate: row.departureDate.toISO(),
   timestamp: row.timestamp.toISO(),
+  station: row.station.stationShortCode,
+  nextStation: row.nextStation && row.nextStation.stationShortCode,
+  previousStation: row.previousStation && row.previousStation.stationShortCode,
 })
 
-export const fromJSON = (json: TrainTrackingMessageJSON): TrainTrackingMessage => ({
+export const fromJSON = async (json: TrainTrackingMessageJSON): Promise<TrainTrackingMessage> => ({
   ...json,
   departureDate: DateTime.fromISO(json.departureDate),
   timestamp: DateTime.fromISO(json.timestamp),
+  station: await retrieve(json.station),
+  nextStation: json.nextStation ? await retrieve(json.nextStation) : void 0,
+  previousStation: json.previousStation ? await retrieve(json.previousStation) : void 0,
 })

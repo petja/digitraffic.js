@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { MqttClient, connect as connectMQTT } from 'mqtt'
-import { trains, compositions } from '@digitraffic/rata'
+import { trains, compositions, trainTracking } from '@digitraffic/rata'
 
 import { createWatcher } from './utils'
 
@@ -48,11 +48,11 @@ export const watchTrainLocations = (
     query.trainNumber,
   ])
 
-export const watchTrackSections = (
+export const trackTrain = (
   query: {
     departureDate?: DateTime
     trainNumber?: number
-    type?: any
+    type?: 'OCCUPY' | 'RELEASE'
     station?: string
     previousStation?: string
     nextStation?: string
@@ -61,7 +61,7 @@ export const watchTrackSections = (
   },
   client: MqttClient
 ) =>
-  createWatcher<trains.Train>(client, trains.fromJSON, [
+  createWatcher<trainTracking.TrainTrackingMessage>(client, trainTracking.fromJSON, [
     'train-tracking',
     query.departureDate,
     query.trainNumber,

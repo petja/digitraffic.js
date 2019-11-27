@@ -1,3 +1,5 @@
+import * as utils from './utils/utils'
+
 import { Composition } from './Composition'
 import * as compositions from './Composition'
 
@@ -19,6 +21,7 @@ export {
   trains,
   trainTracking,
   errors,
+  utils,
   Composition,
   Station,
   Train,

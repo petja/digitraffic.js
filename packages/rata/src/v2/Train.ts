@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import API from './API'
 import {
   TimetableRow,
@@ -6,7 +8,6 @@ import {
   toJSON as timetableRowToJSON,
 } from './TimetableRow'
 import { date2ISO } from './utils/utils'
-import { DateTime } from 'luxon'
 import { DigitrafficError, DigitrafficErrorCode } from './errors'
 
 export interface TrainPropsCommon {
@@ -54,14 +55,16 @@ export interface TrainJSON extends TrainProps {
 export interface Train extends TrainProps {
   trainId: string
   departureDate: DateTime
-  timeTableRows: TimetableRow[]
+  timetableRows: TimetableRow[]
   timetableAcceptanceDate: DateTime
+  origin: TimetableRow
+  destination: TimetableRow
 }
 
 export const toJSON = (train: Train): TrainJSON => ({
   ...train,
   departureDate: date2ISO(train.departureDate),
-  timeTableRows: train.timeTableRows.map(timetableRowToJSON),
+  timeTableRows: train.timetableRows.map(timetableRowToJSON),
   timetableAcceptanceDate: train.timetableAcceptanceDate.toJSON(),
 })
 
@@ -69,8 +72,10 @@ export const fromJSON = (json: TrainJSON): Train => ({
   ...json,
   trainId: json.departureDate + '/' + json.trainNumber,
   departureDate: DateTime.fromISO(json.departureDate, { zone: 'Europe/Helsinki' }),
-  timeTableRows: json.timeTableRows.map(timetableRowFromJSON),
+  timetableRows: json.timeTableRows.map(timetableRowFromJSON),
   timetableAcceptanceDate: DateTime.fromISO(json.timetableAcceptanceDate),
+  origin: timetableRowFromJSON(json.timeTableRows[0]),
+  destination: timetableRowFromJSON(json.timeTableRows[json.timeTableRows.length - 1]),
 })
 
 /**

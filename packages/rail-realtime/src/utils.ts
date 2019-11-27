@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import * as digitraffic from '@digitraffic/rata'
+import * as digitraffic from '@digitraffic/rail'
 import { MqttClient } from 'mqtt'
 import topicMatch from 'mqtt-match'
 

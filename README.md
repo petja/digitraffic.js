@@ -13,18 +13,18 @@ Thanks to strongly-typed code, you can enjoy benefits of Intellisense and type-c
 Get train number `1` from yesterday
 
 ```typescript
-import * as rata from '@digitraffic/rata'
+import * as rail from '@digitraffic/rail'
 import luxon from 'luxon'
 
 const yesterday = luxon.local().minus({ days: 1 })
 
-const train = await rata.trains.retrieve(1, yesterday)
+const train = await rail.trains.retrieve(1, yesterday)
 ```
 
 Listen GPS locations of commuter trains in realtime
 
 ```typescript
-import { watchTrains } from '@digitraffic/rata-realtime'
+import { watchTrains } from '@digitraffic/rail-realtime'
 
 watchTrains({ trainCategory: 'Commuter' }).onMessage(location => {
   console.log(

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { MqttClient, connect as connectMQTT } from 'mqtt'
-import { trains, compositions, trainTracking } from '@digitraffic/rata'
+import { trains, compositions, trainTracking } from '@digitraffic/rail'
 
 import { createWatcher } from './utils'
 

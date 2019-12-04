@@ -71,7 +71,9 @@ export const toJSON = (train: Train): TrainJSON => ({
 export const fromJSON = (json: TrainJSON): Train => ({
   ...json,
   trainId: json.departureDate + '/' + json.trainNumber,
-  departureDate: DateTime.fromISO(json.departureDate, { zone: 'Europe/Helsinki' }),
+  departureDate: DateTime.fromISO(json.departureDate, {
+    zone: 'Europe/Helsinki',
+  }),
   timetableRows: json.timeTableRows.map(timetableRowFromJSON),
   timetableAcceptanceDate: DateTime.fromISO(json.timetableAcceptanceDate),
   origin: timetableRowFromJSON(json.timeTableRows[0]),

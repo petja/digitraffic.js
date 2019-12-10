@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
-import { mock } from '../src/v2/API'
-import { retrieve as retrieveTrain, list as listTrains } from '../src/v2/Train'
+import { mock } from '../src/API'
+import { retrieve as retrieveTrain, list as listTrains } from '../src/Train'
 
 const expectToBeNullOrLuxon = (date?: DateTime) => {
   if (date === undefined) {

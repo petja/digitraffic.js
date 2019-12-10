@@ -7,7 +7,8 @@
   "author": "petja <hello@petja.me>",
   "license": "MIT",
   "scripts": {
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "build": "lerna run build"
   },
   "devDependencies": {
     "lerna": "^3.18.3"

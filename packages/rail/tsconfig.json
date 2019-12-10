@@ -8,5 +8,5 @@
     "module": "commonjs",
     "outDir": "dist"
   },
-  "files": ["src/v2/index.ts"]
+  "files": ["src/index.ts"]
 }

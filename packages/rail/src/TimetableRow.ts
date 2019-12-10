@@ -41,14 +41,14 @@ export interface TimetableRow extends TimetableRowProps {
   actualTime?: DateTime
 }
 
-export const toJSON = (row: TimetableRow): TimetableRowJSON => ({
+export const toJSON = async (row: TimetableRow): Promise<TimetableRowJSON> => ({
   ...row,
   scheduledTime: row.scheduledTime.toISO(),
   liveEstimateTime: row.liveEstimateTime && row.liveEstimateTime.toISO(),
   actualTime: row.actualTime && row.actualTime.toISO(),
 })
 
-export const fromJSON = (json: TimetableRowJSON): TimetableRow => ({
+export const fromJSON = async (json: TimetableRowJSON): Promise<TimetableRow> => ({
   ...json,
   scheduledTime: DateTime.fromISO(json.scheduledTime),
   liveEstimateTime: json.liveEstimateTime ? DateTime.fromISO(json.liveEstimateTime) : void 0,

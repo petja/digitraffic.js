@@ -49,22 +49,26 @@ export interface CompositionProps<T> extends TrainPropsCommon {
 export type CompositionJSON = CompositionProps<TimetableRowJSON>
 export type Composition = CompositionProps<TimetableRow>
 
-export const toJSON = (composition: Composition): CompositionJSON => ({
+export const toJSON = async (composition: Composition): Promise<CompositionJSON> => ({
   ...composition,
-  journeySections: composition.journeySections.map(section => ({
-    ...section,
-    beginTimeTableRow: timetableRowToJSON(section.beginTimeTableRow),
-    endTimeTableRow: timetableRowToJSON(section.endTimeTableRow),
-  })),
+  journeySections: await Promise.all(
+    composition.journeySections.map(async section => ({
+      ...section,
+      beginTimeTableRow: await timetableRowToJSON(section.beginTimeTableRow),
+      endTimeTableRow: await timetableRowToJSON(section.endTimeTableRow),
+    }))
+  ),
 })
 
-export const fromJSON = (json: CompositionJSON): Composition => ({
+export const fromJSON = async (json: CompositionJSON): Promise<Composition> => ({
   ...json,
-  journeySections: json.journeySections.map(section => ({
-    ...section,
-    beginTimeTableRow: timetableFromJSON(section.beginTimeTableRow),
-    endTimeTableRow: timetableFromJSON(section.endTimeTableRow),
-  })),
+  journeySections: await Promise.all(
+    json.journeySections.map(async section => ({
+      ...section,
+      beginTimeTableRow: await timetableFromJSON(section.beginTimeTableRow),
+      endTimeTableRow: await timetableFromJSON(section.endTimeTableRow),
+    }))
+  ),
 })
 
 /**
@@ -88,9 +92,9 @@ export const retrieve = async (trainNumber: number, departureDate: DateTime) => 
  * Get compositions of all trains in the given date
  * @param date Departure date
  */
-export const list = async (query: { departureDate: DateTime }) => {
+export const list = async (query: { departureDate: DateTime }): Promise<Composition[]> => {
   const response = await API.get<CompositionJSON[]>(
     `/compositions/${date2ISO(query.departureDate)}`
   )
-  return response.data.map(fromJSON)
+  return Promise.all(response.data.map(fromJSON))
 }

@@ -19,13 +19,13 @@ export interface GPSLocation extends GPSLocationProps {
   timestamp: DateTime
 }
 
-export const toJSON = (gpsLocation: GPSLocation): GPSLocationJSON => ({
+export const toJSON = async (gpsLocation: GPSLocation): Promise<GPSLocationJSON> => ({
   ...gpsLocation,
   departureDate: gpsLocation.departureDate.toISODate(),
   timestamp: gpsLocation.timestamp.toISO(),
 })
 
-export const fromJSON = (json: GPSLocationJSON): GPSLocation => ({
+export const fromJSON = async (json: GPSLocationJSON): Promise<GPSLocation> => ({
   ...json,
   departureDate: DateTime.fromISO(json.departureDate, { zone: 'Europe/Helsinki' }),
   timestamp: DateTime.fromISO(json.timestamp, { zone: 'Europe/Helsinki' }),
@@ -39,7 +39,7 @@ export const listAllTrains = async (boundingBox?: BBox) => {
     params: { bbox: boundingBox ? boundingBox.slice(0, 4).join(',') : void 0 },
   })
 
-  return response.data.map(fromJSON)
+  return Promise.all(response.data.map(fromJSON))
 }
 
 /**
@@ -50,5 +50,5 @@ export const listLocationsOfTrain = async (trainNumber: number, departureDate: D
     `/train-locations/${date2ISO(departureDate)}/${trainNumber}`
   )
 
-  return response.data.map(fromJSON)
+  return Promise.all(response.data.map(fromJSON))
 }

@@ -25,13 +25,13 @@ export interface TrainTrackingMessage extends TrainTrackingMessageProps {
   timestamp: DateTime
 }
 
-export const toJSON = (row: TrainTrackingMessage): TrainTrackingMessageJSON => ({
+export const toJSON = async (row: TrainTrackingMessage): Promise<TrainTrackingMessageJSON> => ({
   ...row,
   departureDate: row.departureDate.toISO(),
   timestamp: row.timestamp.toISO(),
 })
 
-export const fromJSON = (json: TrainTrackingMessageJSON): TrainTrackingMessage => ({
+export const fromJSON = async (json: TrainTrackingMessageJSON): Promise<TrainTrackingMessage> => ({
   ...json,
   departureDate: DateTime.fromISO(json.departureDate),
   timestamp: DateTime.fromISO(json.timestamp),

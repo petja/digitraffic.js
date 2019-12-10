@@ -61,23 +61,23 @@ export interface Train extends TrainProps {
   destination: TimetableRow
 }
 
-export const toJSON = (train: Train): TrainJSON => ({
+export const toJSON = async (train: Train): Promise<TrainJSON> => ({
   ...train,
   departureDate: date2ISO(train.departureDate),
-  timeTableRows: train.timetableRows.map(timetableRowToJSON),
+  timeTableRows: await Promise.all(train.timetableRows.map(timetableRowToJSON)),
   timetableAcceptanceDate: train.timetableAcceptanceDate.toJSON(),
 })
 
-export const fromJSON = (json: TrainJSON): Train => ({
+export const fromJSON = async (json: TrainJSON): Promise<Train> => ({
   ...json,
   trainId: json.departureDate + '/' + json.trainNumber,
   departureDate: DateTime.fromISO(json.departureDate, {
     zone: 'Europe/Helsinki',
   }),
-  timetableRows: json.timeTableRows.map(timetableRowFromJSON),
+  timetableRows: await Promise.all(json.timeTableRows.map(timetableRowFromJSON)),
   timetableAcceptanceDate: DateTime.fromISO(json.timetableAcceptanceDate),
-  origin: timetableRowFromJSON(json.timeTableRows[0]),
-  destination: timetableRowFromJSON(json.timeTableRows[json.timeTableRows.length - 1]),
+  origin: await timetableRowFromJSON(json.timeTableRows[0]),
+  destination: await timetableRowFromJSON(json.timeTableRows[json.timeTableRows.length - 1]),
 })
 
 /**
@@ -101,7 +101,7 @@ export const retrieve = async (number: number, date?: DateTime) => {
  * Get all trains of the given date
  * @param date Departure date
  */
-export const list = async ({ departureDate }: { departureDate: DateTime }) => {
+export const list = async ({ departureDate }: { departureDate: DateTime }): Promise<Train[]> => {
   const response = await API.get<TrainJSON[]>(`/trains/${date2ISO(departureDate)}`)
-  return response.data.map(fromJSON)
+  return Promise.all(response.data.map(fromJSON))
 }

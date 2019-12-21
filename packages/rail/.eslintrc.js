@@ -22,5 +22,6 @@ module.exports = {
         functions: 'never',
       },
     ],
+    '@typescript-eslint/require-await': 'off',
   },
 }

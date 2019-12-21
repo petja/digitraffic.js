@@ -1,7 +1,7 @@
 export class DigitrafficError extends Error {
   code: DigitrafficErrorCode
 
-  constructor(code: DigitrafficErrorCode) {
+  constructor (code: DigitrafficErrorCode) {
     super()
     this.code = code
   }

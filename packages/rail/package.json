@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint \"./src/**\" --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@turf/helpers": "^6.1.4",

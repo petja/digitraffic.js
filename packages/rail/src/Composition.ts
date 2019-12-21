@@ -5,21 +5,21 @@ import {
   fromJSON as timetableFromJSON,
 } from './TimetableRow'
 import { TrainPropsCommon } from './Train'
-import { date2ISO } from './utils/utils'
+import { date2ISO } from './utils'
 import API from './API'
 import { DigitrafficError, DigitrafficErrorCode } from './errors'
 import { DateTime } from 'luxon'
 
 export interface CompositionProps<T> extends TrainPropsCommon {
-  journeySections: {
+  journeySections: Array<{
     beginTimeTableRow: T
     endTimeTableRow: T
-    locomotives: {
+    locomotives: Array<{
       location: number
       locomotiveType: string
       powerType: string
-    }[]
-    wagons: {
+    }>
+    wagons: Array<{
       location: number
       salesNumber: number
       /**
@@ -34,7 +34,7 @@ export interface CompositionProps<T> extends TrainPropsCommon {
       smoking?: boolean
       disabled?: boolean
       wagonType?: string
-    }[]
+    }>
     /**
      * Total length of the train in meters
      */
@@ -43,7 +43,7 @@ export interface CompositionProps<T> extends TrainPropsCommon {
      * Maximum allowed speed of the train in km/h
      */
     maximumSpeed: number
-  }[]
+  }>
 }
 
 export type CompositionJSON = CompositionProps<TimetableRowJSON>
@@ -76,7 +76,10 @@ export const fromJSON = async (json: CompositionJSON): Promise<Composition> => (
  * @param trainNumber Number of the train
  * @param departureDate Departure date of the train
  */
-export const retrieve = async (trainNumber: number, departureDate: DateTime) => {
+export const retrieve = async (
+  trainNumber: number,
+  departureDate: DateTime
+): Promise<Composition> => {
   const response = await API.get<[] | [CompositionJSON]>(
     `/compositions/${date2ISO(departureDate)}/${trainNumber}`
   )

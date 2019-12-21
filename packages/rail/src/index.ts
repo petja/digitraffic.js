@@ -1,4 +1,7 @@
-import * as utils from './utils/utils'
+/* eslint-disable import/no-duplicates */
+
+import * as utils from './utils'
+import './utils/geojson'
 
 import { Composition } from './Composition'
 import * as compositions from './Composition'

@@ -23,9 +23,9 @@ let lastFetch: Date
  * Get all stations
  * List is automatically cached for 1 hour
  */
-export const list = async () => {
-  if (!stationsPromise || Date.now() - lastFetch.getTime() > ONE_HOUR) {
-    stationsPromise = API.get<Station[]>(`/metadata/stations`)
+export const list = async (): Promise<Station[]> => {
+  if (stationsPromise === undefined || Date.now() - lastFetch.getTime() > ONE_HOUR) {
+    stationsPromise = API.get<Station[]>('/metadata/stations')
     lastFetch = new Date()
   }
 
@@ -35,14 +35,14 @@ export const list = async () => {
 /**
  * Get single station by its shortCode
  */
-export const retrieve = async (shortCode: string) => {
+export const retrieve = async (shortCode: string): Promise<Station> => {
   const stations = await list()
 
   const station = stations.find(
     station => station.stationShortCode.toUpperCase() === shortCode.toUpperCase()
   )
 
-  if (station) {
+  if (station !== undefined) {
     return station
   } else {
     throw new DigitrafficError(DigitrafficErrorCode.NOT_FOUND)

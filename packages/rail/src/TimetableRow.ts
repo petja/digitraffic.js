@@ -14,14 +14,14 @@ interface TimetableRowProps {
   estimateSource?: 'MIKU_USER' | 'LIIKE_USER' | 'LIIKE_AUTOMATIC' | 'COMBOCALC'
   unknownDelay?: boolean
   differenceInMinutes?: number
-  causes: {
+  causes: Array<{
     categoryCodeId: number
     detailedCategoryCodeId: number
     thirdCategoryCodeId: number
     categoryCode: string
     detailedCategoryCode: string
     thirdCategoryCode: string
-  }[]
+  }>
   trainReady?: {
     source: string
     accepted: string
@@ -44,13 +44,14 @@ export interface TimetableRow extends TimetableRowProps {
 export const toJSON = async (row: TimetableRow): Promise<TimetableRowJSON> => ({
   ...row,
   scheduledTime: row.scheduledTime.toISO(),
-  liveEstimateTime: row.liveEstimateTime && row.liveEstimateTime.toISO(),
-  actualTime: row.actualTime && row.actualTime.toISO(),
+  liveEstimateTime: row.liveEstimateTime?.toISO(),
+  actualTime: row.actualTime?.toISO(),
 })
 
 export const fromJSON = async (json: TimetableRowJSON): Promise<TimetableRow> => ({
   ...json,
   scheduledTime: DateTime.fromISO(json.scheduledTime),
-  liveEstimateTime: json.liveEstimateTime ? DateTime.fromISO(json.liveEstimateTime) : void 0,
-  actualTime: json.actualTime ? DateTime.fromISO(json.actualTime) : void 0,
+  liveEstimateTime:
+    json.liveEstimateTime !== undefined ? DateTime.fromISO(json.liveEstimateTime) : undefined,
+  actualTime: json.actualTime !== undefined ? DateTime.fromISO(json.actualTime) : undefined,
 })

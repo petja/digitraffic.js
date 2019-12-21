@@ -1,5 +1,5 @@
 import API from './API'
-import { date2ISO } from './utils/utils'
+import { date2ISO } from './utils'
 import { DateTime } from 'luxon'
 import { Point, BBox } from '@turf/helpers'
 
@@ -34,9 +34,9 @@ export const fromJSON = async (json: GPSLocationJSON): Promise<GPSLocation> => (
 /**
  * Get latest GPS location for all trains which have moved within last 15 minutes
  */
-export const listAllTrains = async (boundingBox?: BBox) => {
-  const response = await API.get<GPSLocationJSON[]>(`/train-locations/latest`, {
-    params: { bbox: boundingBox ? boundingBox.slice(0, 4).join(',') : void 0 },
+export const listAllTrains = async (boundingBox?: BBox): Promise<GPSLocation[]> => {
+  const response = await API.get<GPSLocationJSON[]>('/train-locations/latest', {
+    params: { bbox: boundingBox?.slice(0, 4).join(',') },
   })
 
   return Promise.all(response.data.map(fromJSON))
@@ -45,7 +45,10 @@ export const listAllTrains = async (boundingBox?: BBox) => {
 /**
  * List all locations of single train
  */
-export const listLocationsOfTrain = async (trainNumber: number, departureDate: DateTime) => {
+export const listLocationsOfTrain = async (
+  trainNumber: number,
+  departureDate: DateTime
+): Promise<GPSLocation[]> => {
   const response = await API.get<GPSLocationJSON[]>(
     `/train-locations/${date2ISO(departureDate)}/${trainNumber}`
   )

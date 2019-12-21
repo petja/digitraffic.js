@@ -7,7 +7,7 @@ import {
   fromJSON as timetableRowFromJSON,
   toJSON as timetableRowToJSON,
 } from './TimetableRow'
-import { date2ISO } from './utils/utils'
+import { date2ISO } from './utils'
 import { DigitrafficError, DigitrafficErrorCode } from './errors'
 
 export interface TrainPropsCommon {
@@ -70,7 +70,7 @@ export const toJSON = async (train: Train): Promise<TrainJSON> => ({
 
 export const fromJSON = async (json: TrainJSON): Promise<Train> => ({
   ...json,
-  trainId: json.departureDate + '/' + json.trainNumber,
+  trainId: `${json.departureDate}/${json.trainNumber}`,
   departureDate: DateTime.fromISO(json.departureDate, {
     zone: 'Europe/Helsinki',
   }),
@@ -85,9 +85,9 @@ export const fromJSON = async (json: TrainJSON): Promise<Train> => ({
  * @param number Number of the train
  * @param date Departure date of the train. If value not given, fuzzy search will be used.
  */
-export const retrieve = async (number: number, date?: DateTime) => {
+export const retrieve = async (number: number, date?: DateTime): Promise<Train> => {
   const response = await API.get<[] | [TrainJSON]>(
-    `/trains/${date ? date2ISO(date) : 'latest'}/${number}`
+    `/trains/${date !== undefined ? date2ISO(date) : 'latest'}/${number}`
   )
 
   if (response.data.length === 0) {

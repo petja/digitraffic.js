@@ -6,7 +6,7 @@ import topicMatch from 'mqtt-match'
 
 export const createWatcher = <T>(
   client: MqttClient,
-  fromJSON: (data: any) => T,
+  fromJSON: (data: any) => Promise<T>,
   fields: (string | number | boolean | DateTime | undefined)[]
 ) => {
   const listeners: ((message: T) => any)[] = []
@@ -35,9 +35,9 @@ export const createWatcher = <T>(
 
   client.subscribe(topic)
 
-  client.on('message', (inTopic, buffer) => {
+  client.on('message', async (inTopic, buffer) => {
     if (topicMatch(topic, inTopic)) {
-      const message = fromJSON(JSON.parse(buffer.toString()))
+      const message = await fromJSON(JSON.parse(buffer.toString()))
       listeners.forEach(listener => listener(message))
     }
   })

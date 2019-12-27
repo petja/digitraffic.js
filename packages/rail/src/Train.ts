@@ -7,6 +7,7 @@ import {
   fromJSON as timetableRowFromJSON,
   toJSON as timetableRowToJSON,
 } from './TimetableRow'
+import { TimetableStation, compressTimetable, decompressTimetable } from './TimetableStation'
 import { date2ISO } from './utils'
 import { DigitrafficError, DigitrafficErrorCode } from './errors'
 
@@ -55,7 +56,7 @@ export interface TrainJSON extends TrainProps {
 export interface Train extends TrainProps {
   trainId: string
   departureDate: DateTime
-  timetableRows: TimetableRow[]
+  timetableRows: TimetableStation[]
   timetableAcceptanceDate: DateTime
   origin: TimetableRow
   destination: TimetableRow
@@ -64,7 +65,9 @@ export interface Train extends TrainProps {
 export const toJSON = async (train: Train): Promise<TrainJSON> => ({
   ...train,
   departureDate: date2ISO(train.departureDate),
-  timeTableRows: await Promise.all(train.timetableRows.map(timetableRowToJSON)),
+  timeTableRows: await Promise.all(
+    decompressTimetable(train.timetableRows).map(timetableRowToJSON)
+  ),
   timetableAcceptanceDate: train.timetableAcceptanceDate.toJSON(),
 })
 
@@ -74,7 +77,7 @@ export const fromJSON = async (json: TrainJSON): Promise<Train> => ({
   departureDate: DateTime.fromISO(json.departureDate, {
     zone: 'Europe/Helsinki',
   }),
-  timetableRows: await Promise.all(json.timeTableRows.map(timetableRowFromJSON)),
+  timetableRows: compressTimetable(await Promise.all(json.timeTableRows.map(timetableRowFromJSON))),
   timetableAcceptanceDate: DateTime.fromISO(json.timetableAcceptanceDate),
   origin: await timetableRowFromJSON(json.timeTableRows[0]),
   destination: await timetableRowFromJSON(json.timeTableRows[json.timeTableRows.length - 1]),

@@ -19,7 +19,7 @@ describe('single train', () => {
 
     expect(train.trainNumber).toBe(8533)
     expect(train.departureDate.toISODate()).toBe('2019-11-01')
-    expect(train.timetableRows).toHaveLength(42)
+    expect(train.timetableRows).toHaveLength(22)
   })
 
   it('should have valid fields for timetable rows', async () => {
@@ -28,12 +28,8 @@ describe('single train', () => {
     const train = await retrieveTrain(1, DateTime.fromISO('2019-10-31T22:03:00.000Z'))
 
     train.timetableRows.forEach(row => {
-      expect(typeof row.stationShortCode).toBe('string')
-      expect(typeof row.trainStopping).toBe('boolean')
-
-      expectToBeNullOrLuxon(row.scheduledTime)
-      expectToBeNullOrLuxon(row.actualTime)
-      expectToBeNullOrLuxon(row.liveEstimateTime)
+      expect(typeof row.station).toBe('string')
+      expect(row.ARRIVAL || row.DEPARTURE).toBeDefined()
     })
   })
 })

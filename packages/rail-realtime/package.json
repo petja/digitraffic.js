@@ -8,7 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@digitraffic/rail": "^1.0.0",
+    "@digitraffic/rail": "workspace:*",
     "mqtt": "^3.0.0",
     "mqtt-match": "^2.0.3"
   },
